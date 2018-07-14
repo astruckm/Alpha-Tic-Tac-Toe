@@ -15,7 +15,7 @@ class TicTacToeViewController: UIViewController {
     @IBOutlet var squares: [UIButton]!
     
     var game = Game()
-    var gameIsInProgress = false
+    var playIsInProgress = false
     var numberOfMovesPlayed = 0 /*{
         didSet {
             if oldValue % 2 == 0 {
@@ -33,7 +33,7 @@ class TicTacToeViewController: UIViewController {
     }
     
     @IBAction func squareTapped(_ sender: UIButton) {
-        guard gameIsInProgress == true else { return }
+        guard playIsInProgress == true else { return }
         guard game.gameBoard.squares[sender.tag].state == .empty else { return }
         
         let image = game.isXsTurn == true ? UIImage(named: "X.png") : UIImage(named: "O.png")
@@ -42,13 +42,13 @@ class TicTacToeViewController: UIViewController {
         game.humanMove(atSquare: square)
         numberOfMovesPlayed += 1
         
-        let _ = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [unowned self] (timer) in
+        let _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [unowned self] (timer) in
             self.updateUI()
         }
     }
     
     @IBAction func newGame(_ sender: UIButton) {
-        gameIsInProgress = true
+        playIsInProgress = true
         game = Game()
         updateUI()
     }
@@ -73,8 +73,16 @@ class TicTacToeViewController: UIViewController {
             }
         }
         if game.winner != nil {
-//            let winnerMessage = "O or X is the winner!"
-//            let alert = UIAlertController(title: "Game Over!", message: winnerMessage, preferredStyle: UIAlertControllerStyle.alert)
+            let winner = game.winner == .x ? "X" : "O"
+            let winnerMessage = "\(winner) is the winner!"
+            let alertVC = UIAlertController(title: "Game Over!", message: winnerMessage, preferredStyle: UIAlertControllerStyle.alert)
+            let endGameAction = UIAlertAction(title: "End Game", style: .default) { [unowned self ] action in
+                self.game = Game()
+                self.updateUI()
+            }
+            alertVC.addAction(endGameAction)
+            
+            present(alertVC, animated: true)
         }
     }
 }

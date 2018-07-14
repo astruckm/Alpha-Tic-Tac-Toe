@@ -8,18 +8,43 @@
 
 import Foundation
 
-class ComputerMoves {
-    var playingAsX: Bool
+class ComputerMoves: TracksGameState {
+    let playingAsX: Bool
+    var side: Square.State { return playingAsX ? .x : .o }
+    
+    var playedSquares: [Square] = []
+    //ensure no duplicates when checking playedSquares
+    var playedSquaresSet: Set<Square> { return Set(playedSquares) }
+    var playedSquaresIndices: [Int] { return playedSquaresSet.map {$0.position.rawValue} }
+    var threateningPair: [Square] = []
+    
+    func checkForThreateningPair() {
+//        var pair: [Square] = []
+//        for square in playedSquaresSet {
+            
+            //        let columnToRight = (column + 1) % squaresPerSide
+            //        let columnToLeft = (column + 2) % squaresPerSide
+            //        let rowBelow = (row + 1) % squaresPerSide
+            //        let rowAbove = (row + 2) % squaresPerSide
+            
+//        }
+    }
     
     init(playingAsX: Bool) {
         self.playingAsX = playingAsX
     }
     
     func playRandomSquareAtIndex() -> Int {
-        return Int(arc4random_uniform(9))
+        while true {
+            let random = Int(arc4random_uniform(9))
+            if !playedSquaresIndices.contains(random) {
+                print(random)
+                return random
+            }
+        }
     }
     
-    //These types of moves funs return only Square.Position values, as States are inaccessible to AI
+    //These types of moves funs return only Square.Position values, as whole board is inaccessible to AI
     //First move is in the center or otherwise in a corner
     func playFirstMove(humanMove: Square?) -> Square.Position {
         if let previousMove = humanMove, previousMove.position != .midMid {

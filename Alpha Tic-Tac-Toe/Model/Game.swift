@@ -8,12 +8,14 @@
 
 import Foundation
 
-//protocol TracksGameState?
+protocol TracksGameState {
+    var playedSquares: [Square] { get set }
+}
 
 class Game {
     let gameBoard = GameBoard()
     let computer = ComputerMoves(playingAsX: true)
-    var winner: Side?
+    var winner: Square.State?
     var isXsTurn = false //should this be isPlayersTurn?
     var turnsPlayed = 0
     var gameIsInProgress: Bool {
@@ -21,8 +23,11 @@ class Game {
             return turnsPlayed < 9
         } set { }
     }
-    var playedSquares: [Square] = []
+    var tracksGameStateDelegate: TracksGameState?
     
+    init() {
+        tracksGameStateDelegate = computer
+    }
     
     deinit {
         print("Game ended")
@@ -37,8 +42,9 @@ class Game {
     }
     
     func computerMove() {
+        guard winner == nil else { return }
         if turnsPlayed <= 1 {
-            let firstMove: Square? = playedSquares.first
+            let firstMove: Square? = tracksGameStateDelegate?.playedSquares.first
             let computerFirstMovePosition = computer.playFirstMove(humanMove: firstMove)
             let computerFirstMove = gameBoard.squares[computerFirstMovePosition.rawValue]
             move(atSquare: computerFirstMove)
@@ -52,15 +58,14 @@ class Game {
     }
     
     private func move(atSquare square: Square) {
-        //Call func again if square is already tapped
-        print(square.state)
+        //Need to call func again if square is already tapped
         guard square.state == .empty else { return }
         
         let tappedIcon: Square.State = isXsTurn == true ? .x : .o
         gameBoard.squares[square.position.rawValue].state = tappedIcon
         checkForWinner(sidePlayed: tappedIcon, withSquare: square)
         
-        playedSquares.append(square)
+        tracksGameStateDelegate?.playedSquares.append(square)
         isXsTurn.toggle()
         turnsPlayed += 1
     }
@@ -98,9 +103,10 @@ class Game {
     private func declareWinner(forSide side: Square.State) {
         print("\(side) is the winner!")
         gameIsInProgress = false
-        //TODO: terminate game
+        winner = side
     }
 }
+
 
 class GameResult {
     var consecutiveSquares = 1
