@@ -12,7 +12,7 @@ import Foundation
 
 let squaresPerSide = 3
 
-struct Square {
+struct Square: Hashable {
     enum Position: Int, Hashable {
         case topLeft, topMid, topRight, midLeft, midMid, midRight, bottomLeft, bottomMid, bottomRight
         static var allPositions: [Position] = [.topLeft, .topMid, .topRight, .midLeft, .midMid, .midRight, .bottomLeft, .bottomMid, .bottomRight]
@@ -31,7 +31,8 @@ struct Square {
     var state: State
     var row: Int { return position.rawValue / squaresPerSide }
     var column: Int { return position.rawValue % squaresPerSide }
-    var isOnDiagonal: Bool { return position.rawValue % 2 == 0 }
+    var isOnDiagonalLR: Bool { return self.row == self.column }
+    var isOnDiagonalRL: Bool { return (self.row + self.column == 2) }
     
     static let allSquares: [Square] = {
         var squares: [Square] = []

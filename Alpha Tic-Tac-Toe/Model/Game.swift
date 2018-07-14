@@ -9,42 +9,29 @@
 import Foundation
 
 //protocol TracksGameState?
-//class GameBoard?
-//var name dissonance b/w "square state" and "side"
 
-
-enum Side {
-    case player
-    case computer
-}
-
-class GameResult {
-    var consecutiveSquares = 1
-    var pairs: [(Square, Square)] = []
-    
-    func addPair(to tappedSquare: Square) {
-        //Pairs: same row or column, and abs difference of 1 for the other
-        //OR contains .midMid and another square
-    }
-}
-
-class PlayGame {
-    let gameResult = GameResult()
+class Game {
     let gameBoard = GameBoard()
-    var gameIsInProgress = true
     var winner: Side?
     var isXsTurn = false //should this be isPlayersTurn?
     var turnsPlayed = 0
+    var gameIsInProgress: Bool {
+        get {
+            return turnsPlayed < 9
+        } set { }
+    }
     //var squaresStillEmpty: [Square] = gameBoard.allSquares...within an init()
-    //var stateOfSquares = gameBoard.squareState....within an init()
     let computer: AI
     
     init() {
         self.computer = AI(gameBoard: gameBoard)
     }
     
+    deinit {
+        print("Game ended")
+    }
+    
     //TODO: init method called upon Start button being tapped
-    //TODO: deinit after game is over
     
     func humanMove(atSquare square: Square) {
         move(atSquare: square)
@@ -59,19 +46,21 @@ class PlayGame {
         }
         let playedSquareRawIndex = (playedSquareRawIndices.0 * 2) + playedSquareRawIndices.1
         print(playedSquareRawIndex)
-        if let square = Square(rawValue: playedSquareRawIndex), gameBoard.squareStates[square.row][square.column] == .empty {
-            move(atSquare: square)
-            print("Computer takes \(square)")
-        }
+//        if let square = Square(rawValue: playedSquareRawIndex, state: <#Square.State#>), gameBoard.squareStates[square.row][square.column] == .empty {
+//            move(atSquare: square)
+//            print("Computer takes \(square)")
+//        }
     }
     
     private func move(atSquare square: Square) {
-        //Do nothing if square is already tapped
-        let tappedSquareState = gameBoard.squareStates[square.row][square.column]
-        guard tappedSquareState == .empty else { return }
+        //Call func again if square is already tapped
+        guard square.state == .empty else {
+            move(atSquare: square)
+            return
+        }
         
         let tappedIcon: Square.State = isXsTurn == true ? .x : .o
-        gameBoard.squareStates[square.row][square.column] = tappedIcon
+        gameBoard.squares[square.position.rawValue].state = tappedIcon
         checkForWinner(sidePlayed: tappedIcon, withSquare: square)
         
         isXsTurn.toggle()
@@ -79,34 +68,51 @@ class PlayGame {
     }
     
     private func checkForWinner(sidePlayed side: Square.State, withSquare square: Square) {
-        //check square's row and column
-        //TODO: combine these loops
-        let indexRange = 0...2
-        for index in indexRange {
-            if gameBoard.squareStates[square.row][index] != side { break }
-            if index == 2 {
-                print("\(side) is the winner!")
-                gameIsInProgress = false
-                return
-            }
+        //check square's row, column, and diagonal
+        let columnSquares = gameBoard.squares.filter { $0.column == square.column }
+        let rowSquares = gameBoard.squares.filter { $0.row == square.row }
+        let diagonalSquares: [Square]
+        if square.isOnDiagonalLR {
+            diagonalSquares = gameBoard.squares.filter{ $0.column == $0.row }
+        } else if square.isOnDiagonalRL {
+            diagonalSquares = gameBoard.squares.filter{ $0.column + $0.row == 2 }
+        } else {
+            diagonalSquares = []
         }
-        for index in indexRange {
-            if gameBoard.squareStates[index][square.column] != side { break }
-            if index == 2 {
-                print("\(side) is the winner!")
-                gameIsInProgress = false
-                return
+        
+        checkLineForWinner(side, withLine: columnSquares)
+        checkLineForWinner(side, withLine: rowSquares)
+        checkLineForWinner(side, withLine: diagonalSquares)
+    }
+    
+    private func checkLineForWinner(_ side: Square.State, withLine squares: [Square]) {
+        var counter = 0
+        for square in squares {
+            if square.state != side { return }
+            counter += 1
+            if counter == 3 {
+                declareWinner(forSide: square.state)
             }
-        }
-        //then check diagonals for winner: midMid is side; AND [0][0], [2][2] OR [0][2], [2][0] are side
-        if gameBoard.squareStates[1][1] == side && ((gameBoard.squareStates[0][0] == side && gameBoard.squareStates[2][2] == side) || (gameBoard.squareStates[2][0] == side && gameBoard.squareStates[0][2] == side)) {
-            print("\(side) is the winner!")
-            gameIsInProgress = false
-            return
         }
     }
-
+    
+    private func declareWinner(forSide side: Square.State) {
+        print("\(side) is the winner!")
+        gameIsInProgress = false
+        //TODO: terminate game
+    }
 }
+
+class GameResult {
+    var consecutiveSquares = 1
+    var pairs: [(Square, Square)] = []
+    
+    func addPair(to tappedSquare: Square) {
+        //Pairs: same row or column, and abs difference of 1 for the other
+        //OR contains .midMid and another square
+    }
+}
+
 
 //check if any column or row contains a winner
 //let indexRange = 0...2
