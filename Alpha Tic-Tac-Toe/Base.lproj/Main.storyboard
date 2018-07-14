@@ -121,16 +121,16 @@
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cIX-Qu-OLp">
                                 <rect key="frame" x="163" y="599" width="51" height="40"/>
                             </switch>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TpS-o5-XR7">
-                                <rect key="frame" x="162" y="539" width="50" height="32"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TpS-o5-XR7" userLabel="New Game">
+                                <rect key="frame" x="129.5" y="539" width="115" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="CAi-BN-Sia"/>
                                     <constraint firstAttribute="height" constant="32" id="t7v-4y-kuG"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <state key="normal" title="Start"/>
+                                <state key="normal" title="New Game"/>
                                 <connections>
-                                    <action selector="startGame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HN7-at-osl"/>
+                                    <action selector="newGame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GQf-Iw-zWw"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -150,7 +150,7 @@
                     </view>
                     <connections>
                         <outlet property="gameBoard" destination="aOT-ga-IEH" id="YCG-AS-ygK"/>
-                        <outlet property="start" destination="TpS-o5-XR7" id="cBf-rz-TXH"/>
+                        <outlet property="newGame" destination="TpS-o5-XR7" id="ojj-wX-cCM"/>
                         <outletCollection property="squares" destination="DNq-wT-4WO" collectionClass="NSMutableArray" id="B65-mq-S52"/>
                         <outletCollection property="squares" destination="92K-5y-0Rg" collectionClass="NSMutableArray" id="ejk-LB-LGW"/>
                         <outletCollection property="squares" destination="Oxq-Lx-9lf" collectionClass="NSMutableArray" id="hoy-4i-uoS"/>

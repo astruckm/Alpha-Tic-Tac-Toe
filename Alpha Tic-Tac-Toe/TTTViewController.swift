@@ -10,11 +10,11 @@ import UIKit
 
 class TicTacToeViewController: UIViewController {
     @IBOutlet weak var gameBoard: UIView!
-    @IBOutlet weak var start: UIButton!
+    @IBOutlet weak var newGame: UIButton!
     
     @IBOutlet var squares: [UIButton]!
     
-    let game = Game()
+    var game = Game()
     var gameIsInProgress = false
     var numberOfMovesPlayed = 0 /*{
         didSet {
@@ -34,6 +34,8 @@ class TicTacToeViewController: UIViewController {
     
     @IBAction func squareTapped(_ sender: UIButton) {
         guard gameIsInProgress == true else { return }
+        guard game.gameBoard.squares[sender.tag].state == .empty else { return }
+        
         let image = game.isXsTurn == true ? UIImage(named: "X.png") : UIImage(named: "O.png")
         sender.setImage(image, for: .normal)
         let square = game.gameBoard.squares[sender.tag]
@@ -43,20 +45,20 @@ class TicTacToeViewController: UIViewController {
         let _ = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [unowned self] (timer) in
             self.updateUI()
         }
-
     }
     
-    @IBAction func startGame(_ sender: UIButton) {
-        //init PlayGame
+    @IBAction func newGame(_ sender: UIButton) {
         gameIsInProgress = true
+        game = Game()
+        updateUI()
     }
     
     func setUpUI() {
-        start.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
-        start.layer.borderWidth = 3
-        start.layer.borderColor = UIColor.darkGray.cgColor
-        start.layer.cornerRadius = 10
-        start.titleLabel?.textColor = .black
+        newGame.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
+        newGame.layer.borderWidth = 3
+        newGame.layer.borderColor = UIColor.darkGray.cgColor
+        newGame.layer.cornerRadius = 10
+        newGame.titleLabel?.textColor = .black
     }
     
     func updateUI() {
