@@ -12,6 +12,7 @@ import Foundation
 
 class Game {
     let gameBoard = GameBoard()
+    let computer = ComputerMoves(playingAsX: true)
     var winner: Side?
     var isXsTurn = false //should this be isPlayersTurn?
     var turnsPlayed = 0
@@ -20,12 +21,8 @@ class Game {
             return turnsPlayed < 9
         } set { }
     }
-    //var squaresStillEmpty: [Square] = gameBoard.allSquares...within an init()
-    let computer: AI
+    var playedSquares: [Square] = []
     
-    init() {
-        self.computer = AI(gameBoard: gameBoard)
-    }
     
     deinit {
         print("Game ended")
@@ -35,34 +32,35 @@ class Game {
     
     func humanMove(atSquare square: Square) {
         move(atSquare: square)
+        guard gameIsInProgress == true else { return }
+        computerMove()
     }
     
     func computerMove() {
-        let playedSquareRawIndices: (Int, Int)
         if turnsPlayed <= 1 {
-            playedSquareRawIndices = computer.playFirstMove()
-        } else {
-            playedSquareRawIndices = computer.playNextMoves()
+            let firstMove: Square? = playedSquares.first
+            let computerFirstMovePosition = computer.playFirstMove(humanMove: firstMove)
+            let computerFirstMove = gameBoard.squares[computerFirstMovePosition.rawValue]
+            move(atSquare: computerFirstMove)
+            print("Computer's first move is at: \(computerFirstMove.position)")
+            return
         }
-        let playedSquareRawIndex = (playedSquareRawIndices.0 * 2) + playedSquareRawIndices.1
-        print(playedSquareRawIndex)
-//        if let square = Square(rawValue: playedSquareRawIndex, state: <#Square.State#>), gameBoard.squareStates[square.row][square.column] == .empty {
-//            move(atSquare: square)
-//            print("Computer takes \(square)")
-//        }
+        let squareIndex = computer.playRandomSquareAtIndex()
+        let square = gameBoard.squares[squareIndex]
+        move(atSquare: square)
+        print("Computer takes: \(square.position)")        
     }
     
     private func move(atSquare square: Square) {
         //Call func again if square is already tapped
-        guard square.state == .empty else {
-            move(atSquare: square)
-            return
-        }
+        print(square.state)
+        guard square.state == .empty else { return }
         
         let tappedIcon: Square.State = isXsTurn == true ? .x : .o
         gameBoard.squares[square.position.rawValue].state = tappedIcon
         checkForWinner(sidePlayed: tappedIcon, withSquare: square)
         
+        playedSquares.append(square)
         isXsTurn.toggle()
         turnsPlayed += 1
     }
@@ -90,6 +88,7 @@ class Game {
         for square in squares {
             if square.state != side { return }
             counter += 1
+            print("counter is \(counter)")
             if counter == 3 {
                 declareWinner(forSide: square.state)
             }
@@ -114,30 +113,5 @@ class GameResult {
 }
 
 
-//check if any column or row contains a winner
-//let indexRange = 0...2
-//for rowIndex in indexRange {
-//    for columnIndex in indexRange {
-//        if stateOfSquares[rowIndex][columnIndex] == side {
-//            if columnIndex < 2 {
-//                print("\(side) is the winner!")
-//                return
-//            }
-//            continue
-//        }
-//        break
-//    }
-//}
-//for columnIndex in indexRange {
-//    for rowIndex in indexRange {
-//        if stateOfSquares[rowIndex][columnIndex] == side {
-//            if columnIndex < 2 {
-//                print("\(side) is the winner!")
-//                return
-//            }
-//            continue
-//        }
-//        break
-//    }
-//}
+
 

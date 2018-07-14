@@ -12,20 +12,7 @@ class GameBoard {
     //Is a var to allow changing its state
     var squares: [Square] = Square.allSquares
     
-//    var columnOne: [Square] { return squares.filter({$0.column == 0}) }
-//    var columnTwo: [Square] { return squares.filter({$0.column == 1}) }
-//    var columnThree: [Square] { return squares.filter({$0.column == 2}) }
-//    var rowOne: [Square] { return squares.filter({$0.row == 0}) }
-//    var rowTwo: [Square] { return squares.filter({$0.row == 1}) }
-//    var rowThree: [Square] { return squares.filter({$0.row == 2}) }
-//    var diagonalLR: [Square] { return squares.filter({$0.isOnDiagonalLR}) }
-//    var diagonalRL: [Square] { return squares.filter({$0.isOnDiagonalRL}) }
     
-    
-    //Deprecated****************
-    var allSquares: [[Square.Position]] = [[.topLeft, .topMid, .topRight], [.midLeft, .midMid, .midRight], [.bottomLeft, .bottomMid,. bottomRight]]
-    var squareStates: [[Square.State]] = [[.empty, .empty, .empty], [.empty, .empty, .empty], [.empty, .empty, .empty]]
-    //**************************
     
     var winnablePairs: [[Square]] = [[]]
     

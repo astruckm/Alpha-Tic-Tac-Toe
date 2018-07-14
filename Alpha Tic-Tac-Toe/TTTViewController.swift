@@ -16,23 +16,20 @@ class TicTacToeViewController: UIViewController {
     
     let game = Game()
     var gameIsInProgress = false
-    var numberOfMovesPlayed = 0 {
+    var numberOfMovesPlayed = 0 /*{
         didSet {
             if oldValue % 2 == 0 {
-                game.computerMove()
                 updateUI()
+                numberOfMovesPlayed += 1
             }
         }
-    }
+    }*/
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setUpUI()
-        gameBoard.createTicTacToeBoard()
-        
-        let gameBoardTest = GameBoard()
-        print(gameBoardTest.allSquares)
+        gameBoard.createTicTacToeBoard()        
     }
     
     @IBAction func squareTapped(_ sender: UIButton) {
@@ -42,10 +39,11 @@ class TicTacToeViewController: UIViewController {
         let square = game.gameBoard.squares[sender.tag]
         game.humanMove(atSquare: square)
         numberOfMovesPlayed += 1
-        game.computerMove()
         
-        print("Square with raw value \(sender.tag) taken")
-        updateUI()
+        let _ = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [unowned self] (timer) in
+            self.updateUI()
+        }
+
     }
     
     @IBAction func startGame(_ sender: UIButton) {
