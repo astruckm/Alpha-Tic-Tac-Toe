@@ -9,6 +9,7 @@
 import Foundation
 
 class ComputerMoves: TracksGameState {
+    //MARK: Properties
     let playingAsX: Bool
     var side: Square.State { return playingAsX ? .x : .o }
     
@@ -16,21 +17,11 @@ class ComputerMoves: TracksGameState {
         self.playingAsX = playingAsX
     }
 
-    //MARK: Properties of playedSquares
+    //MARK: TracksGameState
+    //Sub-types of playedSquares in extensions below
     var playedSquares: [Square] = []
-    private var playedSquaresSet: Set<Square> { return Set(playedSquares) } //No duplicates
-    private var playedSquaresPositions: [Square.Position] { return playedSquaresSet.map {$0.position} }
-    private var playedSquaresIndices: [Int] { return playedSquaresPositions.map {$0.rawValue} }
     
-    private var playedSquaresFirstRow: [Square] { return playedSquaresSet.filter {$0.position.rawValue / squaresPerSide == 0} }
-    private var playedSquaresSecondRow: [Square] { return playedSquaresSet.filter {$0.position.rawValue / squaresPerSide == 1} }
-    private var playedSquaresThirdRow: [Square] { return playedSquaresSet.filter {$0.position.rawValue / squaresPerSide == 2} }
-    private var playedSquaresFirstColumn: [Square] { return playedSquaresSet.filter {$0.position.rawValue % squaresPerSide == 0} }
-    private var playedSquaresSecondColumn: [Square] { return playedSquaresSet.filter {$0.position.rawValue % squaresPerSide == 1} }
-    private var playedSquaresThirdColumn: [Square] { return playedSquaresSet.filter {$0.position.rawValue % squaresPerSide == 2} }
-    private var playedSquaresOnDiagonalLR: [Square] { return playedSquaresSet.filter{$0.isOnDiagonalLR} }
-    private var playedSquaresOnDiagonalRL: [Square] { return playedSquaresSet.filter{$0.isOnDiagonalRL} }
-
+    //MARK: Track important pairs/lines
     private var threateningPairs: [(Square, Square)] = []
     private var winnablePairs: [(Square, Square)] = []
     private var possibleWinningLineSquares: [[Square]] = []
@@ -55,7 +46,7 @@ class ComputerMoves: TracksGameState {
     }
     
     
-    //MARK: Methods
+    //MARK: Methods called in Game
     
     //First move is in the center or otherwise in a corner
     func playFirstMove(humanMove: Square?) -> Square.Position {
@@ -93,8 +84,10 @@ class ComputerMoves: TracksGameState {
         return playRandomAvailableSquare()
     }
     
+    //MARK: Sub-methods
+    
     private func fillOutImportantPair(_ pair: (Square, Square)) -> Square.Position {
-        guard !threateningPairs.isEmpty else {
+        guard !(threateningPairs.isEmpty && winnablePairs.isEmpty) else {
             print("blockOpponentsPair called erroneously")
             return .topLeft
         }
@@ -119,7 +112,6 @@ class ComputerMoves: TracksGameState {
         return squareToBlock
     }
     
-    //Run random number generator until it creates a winnable pair on a possibleWinningLine (if not empty) that is next (meaning one row or column space) to adversary
     private func playRandomOptimalRowColumn() -> Square.Position? {
         var testPositions = [0,1,2,3,4,5,6,7,8]
         while !testPositions.isEmpty {
@@ -133,12 +125,14 @@ class ComputerMoves: TracksGameState {
                     if square[0].row == possibleSquare.row {
                         let rowThirdSquareRawValue = (((possibleSquare.row * squaresPerSide) + 1) * squaresPerSide) - sumPossibleRawValues
                         if !playedSquaresIndices.contains(rowThirdSquareRawValue) {
+                            
                             return position
                         }
                     }
                     if square[0].column == possibleSquare.column {
                         let rowThirdSquareRawValue = ((possibleSquare.column + squaresPerSide) * squaresPerSide) - sumPossibleRawValues
                         if !playedSquaresIndices.contains(rowThirdSquareRawValue) {
+                            
                             return position
                         }
                     }
@@ -149,10 +143,11 @@ class ComputerMoves: TracksGameState {
                 testPositions.remove(at: index)
             }
         }
+        
         return nil
     }
     
-    //If computer controls the middle square, play an empty diagonal
+    //If computer controls the middle square, play an empty diagonal that will prevent human from winning
     private func playThreateningDiagonal() -> Square.Position? {
         let possibleMiddleSquare = playedSquares.filter { $0.position == .midMid }
         if let possibleSide = possibleMiddleSquare.first?.state, possibleSide == side {
@@ -188,10 +183,28 @@ class ComputerMoves: TracksGameState {
         return Square.Position(rawValue: random)!
     }
 
-    //TODO: abstract finding another rawValue in a row or column
+    //TODO: abstract finding another rawValue in a row or column???
     
+    //TODO:
 }
 
+extension ComputerMoves {
+    //Sub-types of playedSquares
+    private var playedSquaresSet: Set<Square> { return Set(playedSquares) } //No duplicates
+    private var playedSquaresPositions: [Square.Position] { return playedSquaresSet.map {$0.position} }
+    private var playedSquaresIndices: [Int] { return playedSquaresPositions.map {$0.rawValue} }
+}
 
+extension ComputerMoves {
+    //Track playedSquares within each line
+    private var playedSquaresFirstRow: [Square] { return playedSquaresSet.filter {$0.position.rawValue / squaresPerSide == 0} }
+    private var playedSquaresSecondRow: [Square] { return playedSquaresSet.filter {$0.position.rawValue / squaresPerSide == 1} }
+    private var playedSquaresThirdRow: [Square] { return playedSquaresSet.filter {$0.position.rawValue / squaresPerSide == 2} }
+    private var playedSquaresFirstColumn: [Square] { return playedSquaresSet.filter {$0.position.rawValue % squaresPerSide == 0} }
+    private var playedSquaresSecondColumn: [Square] { return playedSquaresSet.filter {$0.position.rawValue % squaresPerSide == 1} }
+    private var playedSquaresThirdColumn: [Square] { return playedSquaresSet.filter {$0.position.rawValue % squaresPerSide == 2} }
+    private var playedSquaresOnDiagonalLR: [Square] { return playedSquaresSet.filter{$0.isOnDiagonalLR} }
+    private var playedSquaresOnDiagonalRL: [Square] { return playedSquaresSet.filter{$0.isOnDiagonalRL} }
+}
 
 

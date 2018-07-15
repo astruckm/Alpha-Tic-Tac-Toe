@@ -16,7 +16,7 @@ class Game {
     let gameBoard = GameBoard()
     let computer = ComputerMoves(playingAsX: true)
     var winner: Square.State?
-    var isXsTurn = false //should this be isPlayersTurn?
+    var isXsTurn = false
     var turnsPlayed = 0
     var gameIsInProgress: Bool {
         get {
@@ -48,6 +48,7 @@ class Game {
         let squareIndex = computer.playNextMoves()
         let square = gameBoard.squares[squareIndex.rawValue]
         move(atSquare: square)
+        computer.updateImportantPairs()
     }
     
     private func move(atSquare square: Square) {

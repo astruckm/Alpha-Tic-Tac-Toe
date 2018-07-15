@@ -46,8 +46,8 @@ class TicTacToeViewController: UIViewController {
     func setUpUI() {
         newGame.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
         newGame.layer.borderWidth = 3
-        newGame.layer.borderColor = UIColor.darkGray.cgColor
-        newGame.layer.cornerRadius = 15
+        newGame.layer.borderColor = UIColor.blue.cgColor
+        newGame.layer.cornerRadius = 20
         newGame.titleLabel?.textColor = .black
     }
     
@@ -62,6 +62,10 @@ class TicTacToeViewController: UIViewController {
             case .x: square.setImage(xImage, for: .normal)
             }
         }
+        checkIfGameEnded()
+    }
+    
+    private func checkIfGameEnded() {
         if game.winner != nil || game.turnsPlayed == 9 {
             let completionMessage: String?
             if let winner = game.winner {
@@ -79,7 +83,6 @@ class TicTacToeViewController: UIViewController {
             alertVC.addAction(endGameAction)
             
             present(alertVC, animated: true)
-
         }
     }
     
