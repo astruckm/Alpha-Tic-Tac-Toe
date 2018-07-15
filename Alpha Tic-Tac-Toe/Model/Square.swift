@@ -20,7 +20,14 @@ struct Square: Hashable {
     
     enum State: String, Equatable, Hashable {
         case empty, x, o
-//        static var allCases: [State] = [.empty, .x, .o]
+        
+        var adversary: State? {
+            switch self {
+            case .empty: return nil
+            case .x: return .o
+            case .o: return .x
+            }
+        }
         
         static func == (lhs: State, rhs: State) -> Bool {
             return lhs.rawValue == rhs.rawValue

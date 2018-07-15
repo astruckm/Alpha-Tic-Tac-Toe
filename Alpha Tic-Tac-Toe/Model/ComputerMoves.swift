@@ -13,21 +13,33 @@ class ComputerMoves: TracksGameState {
     var side: Square.State { return playingAsX ? .x : .o }
     
     var playedSquares: [Square] = []
-    //ensure no duplicates when checking playedSquares
-    var playedSquaresSet: Set<Square> { return Set(playedSquares) }
-    var playedSquaresIndices: [Int] { return playedSquaresSet.map {$0.position.rawValue} }
-    var threateningPair: [Square] = []
+    private var playedSquaresSet: Set<Square> { return Set(playedSquares) } //No duplicates
     
-    func checkForThreateningPair() {
-//        var pair: [Square] = []
-//        for square in playedSquaresSet {
-            
-            //        let columnToRight = (column + 1) % squaresPerSide
-            //        let columnToLeft = (column + 2) % squaresPerSide
-            //        let rowBelow = (row + 1) % squaresPerSide
-            //        let rowAbove = (row + 2) % squaresPerSide
-            
-//        }
+    //Are these necessary?
+    private var playedSquaresPositions: [Square.Position] { return playedSquaresSet.map {$0.position} }
+    private var playedSquaresIndices: [Int] { return playedSquaresPositions.map({$0.rawValue})}
+    
+    private var playedSquaresFirstRow: [Square] { return playedSquaresSet.filter {$0.position.rawValue / squaresPerSide == 0} }
+    private var playedSquaresSecondRow: [Square] { return playedSquaresSet.filter {$0.position.rawValue / squaresPerSide == 1} }
+    private var playedSquaresThirdRow: [Square] { return playedSquaresSet.filter {$0.position.rawValue / squaresPerSide == 2} }
+    private var playedSquaresFirstColumn: [Square] { return playedSquaresSet.filter {$0.position.rawValue % squaresPerSide == 0} }
+    private var playedSquaresSecondColumn: [Square] { return playedSquaresSet.filter {$0.position.rawValue % squaresPerSide == 1} }
+    private var playedSquaresThirdColumn: [Square] { return playedSquaresSet.filter {$0.position.rawValue % squaresPerSide == 2} }
+    private var playedSquaresOnDiagonalLR: [Square] { return playedSquaresSet.filter{$0.isOnDiagonalLR} }
+    private var playedSquaresOnDiagonalRL: [Square] { return playedSquaresSet.filter{$0.isOnDiagonalRL} }
+
+    var threateningPairs: [(Square, Square)] = [] //This could be computed based on above??
+    
+    func updateThreateningPairs() {
+        threateningPairs = []
+        let rowsColumnsDiagonals = [playedSquaresFirstRow, playedSquaresSecondRow, playedSquaresThirdRow, playedSquaresFirstColumn, playedSquaresSecondColumn, playedSquaresThirdColumn, playedSquaresOnDiagonalLR, playedSquaresOnDiagonalRL]
+        for line in rowsColumnsDiagonals {
+            if line.count == 2 {
+                if line[0].state == line[1].state && line[0].state == side.adversary {
+                    threateningPairs.append((line[0], line[1]))
+                }
+            }
+        }
     }
     
     init(playingAsX: Bool) {
@@ -38,7 +50,6 @@ class ComputerMoves: TracksGameState {
         while true {
             let random = Int(arc4random_uniform(9))
             if !playedSquaresIndices.contains(random) {
-                print(random)
                 return random
             }
         }
@@ -61,15 +72,10 @@ class ComputerMoves: TracksGameState {
         return .topLeft
     }
     
-//    func blockOpponentsPair() -> Square {
-//        
-//    }
-    
-    func playNextMoves() -> (rowIndex: Int, columnIndex: Int) {
-        
-        
-        return (-1, -1)
-    }
+    //    func blockOpponentsPair() -> Square {
+    //
+    //    }
+
     
     //Always block a pair of opponent's squares if potential 3rd square is .empty
     //Otherwise, make its own pair

@@ -32,12 +32,11 @@ class Game {
     deinit {
         print("Game ended")
     }
-    
-    //TODO: init method called upon Start button being tapped
-    
+        
     func humanMove(atSquare square: Square) {
         move(atSquare: square)
         guard gameIsInProgress == true else { return }
+        computer.updateThreateningPairs()
         computerMove()
     }
     
@@ -61,11 +60,12 @@ class Game {
         //Need to call func again if square is already tapped
         guard square.state == .empty else { return }
         
-        let tappedIcon: Square.State = isXsTurn == true ? .x : .o
-        gameBoard.squares[square.position.rawValue].state = tappedIcon
-        checkForWinner(sidePlayed: tappedIcon, withSquare: square)
+        let sideTapped: Square.State = isXsTurn == true ? .x : .o
+        gameBoard.squares[square.position.rawValue].state = sideTapped
+        checkForWinner(sidePlayed: sideTapped, withSquare: square)
         
-        tracksGameStateDelegate?.playedSquares.append(square)
+        let newSquare = Square(position: square.position, state: sideTapped)
+        tracksGameStateDelegate?.playedSquares.append(newSquare)
         isXsTurn.toggle()
         turnsPlayed += 1
     }
@@ -93,7 +93,6 @@ class Game {
         for square in squares {
             if square.state != side { return }
             counter += 1
-            print("counter is \(counter)")
             if counter == 3 {
                 declareWinner(forSide: square.state)
             }
