@@ -101,15 +101,6 @@ class Game {
 }
 
 
-class GameResult {
-    var consecutiveSquares = 1
-    var pairs: [(Square, Square)] = []
-    
-    func addPair(to tappedSquare: Square) {
-        //Pairs: same row or column, and abs difference of 1 for the other
-        //OR contains .midMid and another square
-    }
-}
 
 
 

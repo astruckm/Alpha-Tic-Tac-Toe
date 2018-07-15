@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  Alpha Tic-Tac-To
+//  Alpha Tic-Tac-Toe
 //
 //  Created by ASM on 7/9/18.
 //  Copyright © 2018 ASM. All rights reserved.
@@ -11,14 +11,10 @@ import UIKit
 class TicTacToeViewController: UIViewController {
     @IBOutlet weak var gameBoard: UIView!
     @IBOutlet weak var newGame: UIButton!
-    
     @IBOutlet var squares: [UIButton]!
     
     var game = Game()
     var playIsInProgress = false
-//    var numberOfMovesPlayed: Int {
-//        return game.turnsPlayed
-//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +31,6 @@ class TicTacToeViewController: UIViewController {
         sender.setImage(image, for: .normal)
         let square = game.gameBoard.squares[sender.tag]
         game.humanMove(atSquare: square)
-//        numberOfMovesPlayed += 1
         
         let _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [unowned self] (timer) in
             self.updateUI()
@@ -52,7 +47,7 @@ class TicTacToeViewController: UIViewController {
         newGame.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
         newGame.layer.borderWidth = 3
         newGame.layer.borderColor = UIColor.darkGray.cgColor
-        newGame.layer.cornerRadius = 10
+        newGame.layer.cornerRadius = 15
         newGame.titleLabel?.textColor = .black
     }
     

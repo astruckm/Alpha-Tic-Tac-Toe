@@ -12,6 +12,11 @@ class ComputerMoves: TracksGameState {
     let playingAsX: Bool
     var side: Square.State { return playingAsX ? .x : .o }
     
+    init(playingAsX: Bool) {
+        self.playingAsX = playingAsX
+    }
+
+    //MARK: Properties of playedSquares
     var playedSquares: [Square] = []
     private var playedSquaresSet: Set<Square> { return Set(playedSquares) } //No duplicates
     private var playedSquaresPositions: [Square.Position] { return playedSquaresSet.map {$0.position} }
@@ -28,12 +33,12 @@ class ComputerMoves: TracksGameState {
 
     private var threateningPairs: [(Square, Square)] = []
     private var winnablePairs: [(Square, Square)] = []
-    private var possibleWinningLines: [[Square]] = []
+    private var possibleWinningLineSquares: [[Square]] = []
 
     func updateImportantPairs() {
         threateningPairs = []
         winnablePairs = []
-        possibleWinningLines = []
+        possibleWinningLineSquares = []
         let rowsColumnsDiagonals = [playedSquaresFirstRow, playedSquaresSecondRow, playedSquaresThirdRow, playedSquaresFirstColumn, playedSquaresSecondColumn, playedSquaresThirdColumn, playedSquaresOnDiagonalLR, playedSquaresOnDiagonalRL]
         for line in rowsColumnsDiagonals {
             if line.count == 2 {
@@ -44,20 +49,14 @@ class ComputerMoves: TracksGameState {
                 }
             }
             if line.count == 1 && line[0].state == side {
-                possibleWinningLines.append(line)
+                possibleWinningLineSquares.append(line)
             }
         }
-//        print("Number of threatening pairs: \(threateningPairs.count)")
-//        print("Number of winnable pairs: \(winnablePairs.count)")
-        print("Number of possible winning lines: \(possibleWinningLines.count)")
-    }
-    
-    init(playingAsX: Bool) {
-        self.playingAsX = playingAsX
     }
     
     
-    //These types of moves funs return only Square.Position values, as whole board is inaccessible to AI
+    //MARK: Methods
+    
     //First move is in the center or otherwise in a corner
     func playFirstMove(humanMove: Square?) -> Square.Position {
         if let previousMove = humanMove, previousMove.position != .midMid {
@@ -65,16 +64,16 @@ class ComputerMoves: TracksGameState {
         }
         
         let random = Int(arc4random_uniform(4))
-        let squarePositionRawValue = (random + (random / 2)) * 2
-        if let position = Square.Position(rawValue: squarePositionRawValue) {
+        let cornerPositionsRawValue = (random + (random / 2)) * 2
+        if let position = Square.Position(rawValue: cornerPositionsRawValue) {
             return position
         }
         
-        print("\nCould not initialize correct Square!\n")
+        print("\nCould not initialize correct Square Position!\n")
         return .topLeft
     }
     
-    //Priority of moves: 1. Win game if possible 2. Block human from winning 3. Threaten human from row or column (non-diagonal 4. Finish a tie game
+    //Priority of moves: 1. Win game if possible 2. Block human from winning 3. Threaten human from row or column (non-diagonal) 4. Threaten from diagonal 5. Finish a tie game
     func playNextMoves() -> Square.Position {
         if !winnablePairs.isEmpty {
             let winnablePair = winnablePairs[0]
@@ -84,8 +83,11 @@ class ComputerMoves: TracksGameState {
             let threateningPair = threateningPairs[0]
             return fillOutImportantPair(threateningPair)
         }
-        if let randomOptimalSquare = playRandomOptimalSquare(), !possibleWinningLines.isEmpty {
+        if let randomOptimalSquare = playRandomOptimalRowColumn(), !possibleWinningLineSquares.isEmpty {
             return randomOptimalSquare
+        }
+        if let threateningDiagonal = playThreateningDiagonal() {
+            return threateningDiagonal
         }
         
         return playRandomAvailableSquare()
@@ -118,23 +120,23 @@ class ComputerMoves: TracksGameState {
     }
     
     //Run random number generator until it creates a winnable pair on a possibleWinningLine (if not empty) that is next (meaning one row or column space) to adversary
-    private func playRandomOptimalSquare() -> Square.Position? {
-        while true {
+    private func playRandomOptimalRowColumn() -> Square.Position? {
+        var testPositions = [0,1,2,3,4,5,6,7,8]
+        while !testPositions.isEmpty {
             let position = generateRandomPosition()
-            var testPositions = [0,1,2,3,4,5,6,7,8]
             
             if !playedSquaresPositions.contains(position) {
                 let possibleSquare = Square(position: position, state: side)
                 //If position is on a possibleWinningLine that is column or row (not diagonal), return.
-                for line in possibleWinningLines {
-                    let sumPossibleRawValues = line[0].position.rawValue + possibleSquare.position.rawValue
-                    if line[0].row == possibleSquare.row {
+                for square in possibleWinningLineSquares {
+                    let sumPossibleRawValues = square[0].position.rawValue + possibleSquare.position.rawValue
+                    if square[0].row == possibleSquare.row {
                         let rowThirdSquareRawValue = (((possibleSquare.row * squaresPerSide) + 1) * squaresPerSide) - sumPossibleRawValues
                         if !playedSquaresIndices.contains(rowThirdSquareRawValue) {
                             return position
                         }
                     }
-                    if line[0].column == possibleSquare.column {
+                    if square[0].column == possibleSquare.column {
                         let rowThirdSquareRawValue = ((possibleSquare.column + squaresPerSide) * squaresPerSide) - sumPossibleRawValues
                         if !playedSquaresIndices.contains(rowThirdSquareRawValue) {
                             return position
@@ -143,9 +145,30 @@ class ComputerMoves: TracksGameState {
                 }
             }
             
-            testPositions.remove(at: position.rawValue)
-            if testPositions.isEmpty { return nil }
+            if let index = testPositions.index(of: position.rawValue) {
+                testPositions.remove(at: index)
+            }
         }
+        return nil
+    }
+    
+    //If computer controls the middle square, play an empty diagonal
+    private func playThreateningDiagonal() -> Square.Position? {
+        let possibleMiddleSquare = playedSquares.filter { $0.position == .midMid }
+        if let possibleSide = possibleMiddleSquare.first?.state, possibleSide == side {
+            let cornerPositionsRawValue = [0,2,6,8]
+            for cornerValue in cornerPositionsRawValue {
+                let rowIndex = cornerValue / squaresPerSide
+                let columnIndex = cornerValue % squaresPerSide
+                let numberplayedInRow = playedSquaresIndices.filter{($0/squaresPerSide) == rowIndex}.count
+                let numberplayedInColumn = playedSquaresIndices.filter{($0%squaresPerSide) == columnIndex}.count
+                //position has to be empty, and its row and column have to each have only one other square
+                if let position = Square.Position(rawValue: cornerValue), !playedSquaresPositions.contains(position), numberplayedInRow <= 1, numberplayedInColumn <= 1 {
+                    return position
+                }
+            }
+        }
+        return nil
     }
     
     //This if near end of game, there are no ways to win or threaten
@@ -159,11 +182,13 @@ class ComputerMoves: TracksGameState {
         }
     }
 
+    //TODO: abstract this more, so can take in any value, use for firstMove
     private func generateRandomPosition() -> Square.Position {
         let random = Int(arc4random_uniform(9))
         return Square.Position(rawValue: random)!
     }
 
+    //TODO: abstract finding another rawValue in a row or column
     
 }
 
