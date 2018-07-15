@@ -1,17 +1,9 @@
-//
-//  Square.swift
-//  Alpha Tic-Tac-Toe
-//
-//  Created by ASM on 7/10/18.
-//  Copyright © 2018 ASM. All rights reserved.
-//
 
 import Foundation
 
-//For whole model, should I be working with row-column, or raw index (0-8)?
-
 let squaresPerSide = 3
 
+//This is the base object, from which the game board and its state is created
 struct Square: Hashable, Equatable {
     enum Position: Int, Hashable {
         case topLeft, topMid, topRight, midLeft, midMid, midRight, bottomLeft, bottomMid, bottomRight
@@ -22,6 +14,7 @@ struct Square: Hashable, Equatable {
         }
     }
     
+    //This type used for both the state of a Square and for the associated player in the game
     enum State: String, Equatable, Hashable {
         case empty, x, o
         

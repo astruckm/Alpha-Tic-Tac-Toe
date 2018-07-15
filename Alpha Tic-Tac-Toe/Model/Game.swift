@@ -1,10 +1,3 @@
-//
-//  Game.swift
-//  Alpha Tic-Tac-Toe
-//
-//  Created by ASM on 7/9/18.
-//  Copyright © 2018 ASM. All rights reserved.
-//
 
 import Foundation
 
@@ -13,6 +6,7 @@ protocol TracksGameState {
 }
 
 class Game {
+    //MARK: Properties
     let gameBoard = GameBoard()
     let computer = ComputerMoves(playingAsX: true)
     var winner: Square.State?
@@ -25,10 +19,12 @@ class Game {
     }
     var tracksGameStateDelegate: TracksGameState?
     
+    //MARK: Initialization
     init() {
         tracksGameStateDelegate = computer
     }
-            
+    
+    //MARK: Methods called to play game
     func humanMove(atSquare square: Square) {
         move(atSquare: square)
         guard gameIsInProgress == true else { return }
@@ -51,6 +47,7 @@ class Game {
         computer.updateImportantPairs()
     }
     
+    //MARK: Sub-methods
     private func move(atSquare square: Square) {
         //Need to call func again if square is already tapped
         guard square.state == .empty else { return }

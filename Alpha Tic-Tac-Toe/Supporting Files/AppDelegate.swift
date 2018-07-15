@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  Alpha Tic-Tac-To
-//
-//  Created by ASM on 7/9/18.
-//  Copyright © 2018 ASM. All rights reserved.
-//
 
 import UIKit
 
