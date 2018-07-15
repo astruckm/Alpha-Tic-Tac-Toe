@@ -66,6 +66,7 @@
 		72AC54B120F9730100DE62D8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				7217731420F4368700AE4934 /* Default-568h@2x.png */,
 				72BA053A20F3884700AC40C9 /* Assets.xcassets */,
 				72BA053320F3884500AC40C9 /* AppDelegate.swift */,
 				72BA053C20F3884700AC40C9 /* LaunchScreen.storyboard */,
@@ -85,7 +86,6 @@
 		72BA052720F3884500AC40C9 = {
 			isa = PBXGroup;
 			children = (
-				7217731420F4368700AE4934 /* Default-568h@2x.png */,
 				72BA053220F3884500AC40C9 /* Alpha Tic-Tac-Toe */,
 				72BA053120F3884500AC40C9 /* Products */,
 			);
@@ -102,10 +102,10 @@
 		72BA053220F3884500AC40C9 /* Alpha Tic-Tac-Toe */ = {
 			isa = PBXGroup;
 			children = (
+				72BA053720F3884500AC40C9 /* Main.storyboard */,
 				72BA053520F3884500AC40C9 /* TTTViewController.swift */,
 				72AC54AE20F9504500DE62D8 /* Model */,
 				72AC54B220F9775F00DE62D8 /* Helpers */,
-				72BA053720F3884500AC40C9 /* Main.storyboard */,
 				72AC54B120F9730100DE62D8 /* Supporting Files */,
 				72BA053F20F3884700AC40C9 /* Info.plist */,
 			);

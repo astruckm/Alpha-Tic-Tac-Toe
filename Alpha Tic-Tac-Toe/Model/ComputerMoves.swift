@@ -14,8 +14,6 @@ class ComputerMoves: TracksGameState {
     
     var playedSquares: [Square] = []
     private var playedSquaresSet: Set<Square> { return Set(playedSquares) } //No duplicates
-    
-    //Are these necessary?
     private var playedSquaresPositions: [Square.Position] { return playedSquaresSet.map {$0.position} }
     
     private var playedSquaresFirstRow: [Square] { return playedSquaresSet.filter {$0.position.rawValue / squaresPerSide == 0} }
@@ -43,6 +41,8 @@ class ComputerMoves: TracksGameState {
                 }
             }
         }
+        print("Number of threatening pairs: \(threateningPairs.count)")
+        print("Number of winnable pairs: \(winnablePairs.count)")
     }
     
     init(playingAsX: Bool) {
@@ -68,16 +68,19 @@ class ComputerMoves: TracksGameState {
     }
     
     func playNextMoves() -> Square.Position {
+        if !winnablePairs.isEmpty {
+            let winnablePair = winnablePairs[0]
+            return fillOutImportantPair(winnablePair)
+        }
         if !threateningPairs.isEmpty {
             let threateningPair = threateningPairs[0]
-            return blockOpponentsPair(threateningPair)
+            return fillOutImportantPair(threateningPair)
         }
         
-        
-        return playRandomSquare()
+        return playRandomOptimalSquare()
     }
     
-    private func blockOpponentsPair(_ pair: (Square, Square)) -> Square.Position {
+    private func fillOutImportantPair(_ pair: (Square, Square)) -> Square.Position {
         guard !threateningPairs.isEmpty else {
             print("blockOpponentsPair called erroneously")
             return .topLeft
@@ -103,19 +106,23 @@ class ComputerMoves: TracksGameState {
         return squareToBlock
     }
     
-    private func playRandomSquare() -> Square.Position {
+    //Run random number generator until it creates a winnable pair that is in same row or column as adversary
+    private func playRandomOptimalSquare() -> Square.Position {
         while true {
             let random = Int(arc4random_uniform(9))
             let position = Square.Position(rawValue: random)!
-            if !playedSquaresPositions.contains(position) {
+            
+            if !playedSquaresPositions.contains(position)  {
+                let possibleSquare = Square(position: position, state: side)
+                var tempPlayedSquares = playedSquaresSet
+                
+                
                 return position
             }
         }
     }
 
-
     
-    //Always block a pair of opponent's squares if potential 3rd square is .empty
     //Otherwise, make its own pair
     //Always win if computer's potential 3rd square from a pair is .empty
     

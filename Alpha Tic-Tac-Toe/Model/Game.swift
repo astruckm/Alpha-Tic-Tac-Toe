@@ -28,11 +28,7 @@ class Game {
     init() {
         tracksGameStateDelegate = computer
     }
-    
-    deinit {
-        print("Game ended")
-    }
-        
+            
     func humanMove(atSquare square: Square) {
         move(atSquare: square)
         guard gameIsInProgress == true else { return }
@@ -47,13 +43,11 @@ class Game {
             let computerFirstMovePosition = computer.playFirstMove(humanMove: firstMove)
             let computerFirstMove = gameBoard.squares[computerFirstMovePosition.rawValue]
             move(atSquare: computerFirstMove)
-            print("Computer's first move is at: \(computerFirstMove.position)")
             return
         }
         let squareIndex = computer.playNextMoves()
         let square = gameBoard.squares[squareIndex.rawValue]
         move(atSquare: square)
-        print("Computer takes: \(square.position)")        
     }
     
     private func move(atSquare square: Square) {

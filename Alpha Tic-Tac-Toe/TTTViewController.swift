@@ -68,18 +68,26 @@ class TicTacToeViewController: UIViewController {
             }
         }
         if game.winner != nil || game.turnsPlayed == 9 {
-            let winner = game.winner == .x ? "X" : "O"
-            let winnerMessage = "\(winner) is the winner!"
-            let alertVC = UIAlertController(title: "Game Over!", message: winnerMessage, preferredStyle: UIAlertControllerStyle.alert)
-            let endGameAction = UIAlertAction(title: "End Game", style: .default) { [unowned self ] action in
+            let completionMessage: String?
+            if let winner = game.winner {
+                let winnerText = winner == .x ? "X" : "O"
+                completionMessage = "\(winnerText) is the winner!"
+            } else {
+                completionMessage = "Tie game."
+            }
+            
+            let alertVC = UIAlertController(title: completionMessage, message: nil, preferredStyle: UIAlertControllerStyle.alert)
+            let endGameAction = UIAlertAction(title: "Reset", style: .default) { [unowned self ] action in
                 self.game = Game()
                 self.updateUI()
             }
             alertVC.addAction(endGameAction)
             
             present(alertVC, animated: true)
+
         }
     }
+    
 }
 
 
