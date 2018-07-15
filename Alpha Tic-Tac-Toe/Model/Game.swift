@@ -36,7 +36,7 @@ class Game {
     func humanMove(atSquare square: Square) {
         move(atSquare: square)
         guard gameIsInProgress == true else { return }
-        computer.updateThreateningPairs()
+        computer.updateImportantPairs()
         computerMove()
     }
     
@@ -50,8 +50,8 @@ class Game {
             print("Computer's first move is at: \(computerFirstMove.position)")
             return
         }
-        let squareIndex = computer.playRandomSquareAtIndex()
-        let square = gameBoard.squares[squareIndex]
+        let squareIndex = computer.playNextMoves()
+        let square = gameBoard.squares[squareIndex.rawValue]
         move(atSquare: square)
         print("Computer takes: \(square.position)")        
     }

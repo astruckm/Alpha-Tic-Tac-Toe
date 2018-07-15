@@ -16,14 +16,9 @@ class TicTacToeViewController: UIViewController {
     
     var game = Game()
     var playIsInProgress = false
-    var numberOfMovesPlayed = 0 /*{
-        didSet {
-            if oldValue % 2 == 0 {
-                updateUI()
-                numberOfMovesPlayed += 1
-            }
-        }
-    }*/
+//    var numberOfMovesPlayed: Int {
+//        return game.turnsPlayed
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +35,7 @@ class TicTacToeViewController: UIViewController {
         sender.setImage(image, for: .normal)
         let square = game.gameBoard.squares[sender.tag]
         game.humanMove(atSquare: square)
-        numberOfMovesPlayed += 1
+//        numberOfMovesPlayed += 1
         
         let _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [unowned self] (timer) in
             self.updateUI()
@@ -72,7 +67,7 @@ class TicTacToeViewController: UIViewController {
             case .x: square.setImage(xImage, for: .normal)
             }
         }
-        if game.winner != nil {
+        if game.winner != nil || game.turnsPlayed == 9 {
             let winner = game.winner == .x ? "X" : "O"
             let winnerMessage = "\(winner) is the winner!"
             let alertVC = UIAlertController(title: "Game Over!", message: winnerMessage, preferredStyle: UIAlertControllerStyle.alert)
