@@ -12,10 +12,14 @@ import Foundation
 
 let squaresPerSide = 3
 
-struct Square: Hashable {
+struct Square: Hashable, Equatable {
     enum Position: Int, Hashable {
         case topLeft, topMid, topRight, midLeft, midMid, midRight, bottomLeft, bottomMid, bottomRight
         static var allPositions: [Position] = [.topLeft, .topMid, .topRight, .midLeft, .midMid, .midRight, .bottomLeft, .bottomMid, .bottomRight]
+        
+        static func == (lhs: Position, rhs: Position) -> Bool {
+            return lhs.rawValue == rhs.rawValue
+        }
     }
     
     enum State: String, Equatable, Hashable {
@@ -32,6 +36,10 @@ struct Square: Hashable {
         static func == (lhs: State, rhs: State) -> Bool {
             return lhs.rawValue == rhs.rawValue
         }
+    }
+    
+    static func == (lhs: Square, rhs: Square) -> Bool {
+        return (lhs.position == rhs.position) && (lhs.state == rhs.state)
     }
     
     let position: Position
