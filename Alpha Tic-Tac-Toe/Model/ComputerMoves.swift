@@ -153,8 +153,8 @@ class ComputerMoves: TracksGameState {
             for cornerValue in cornerPositionsRawValue {
                 let rowIndex = cornerValue / squaresPerSide
                 let columnIndex = cornerValue % squaresPerSide
-                let numberPlayedInRow = playedSquaresIndices.filter{($0/squaresPerSide) == rowIndex}.count
-                let numberPlayedInColumn = playedSquaresIndices.filter{($0%squaresPerSide) == columnIndex}.count
+                let numberPlayedInRow = playedSquaresIndices.filter{($0 / squaresPerSide) == rowIndex}.count
+                let numberPlayedInColumn = playedSquaresIndices.filter{($0 % squaresPerSide) == columnIndex}.count
                 //position has to be empty, and its row and column have to each have only one other square to prevent human from having chance to win
                 if let position = Square.Position(rawValue: cornerValue), !playedSquaresPositions.contains(position), numberPlayedInRow <= 1, numberPlayedInColumn <= 1 {
                     
