@@ -5,6 +5,7 @@ protocol TracksGameState {
     var playedSquares: [Square] { get set }
 }
 
+//Play the game
 class Game {
     //MARK: Properties
     let gameBoard = GameBoard()
@@ -49,7 +50,6 @@ class Game {
     
     //MARK: Sub-methods
     private func move(atSquare square: Square) {
-        //Need to call func again if square is already tapped
         guard square.state == .empty else { return }
         
         let sideTapped: Square.State = isXsTurn == true ? .x : .o
@@ -63,7 +63,7 @@ class Game {
     }
     
     private func checkForWinner(sidePlayed side: Square.State, withSquare square: Square) {
-        //check square's row, column, and diagonal
+        //check newly-played square's row, column, and diagonal
         let columnSquares = gameBoard.squares.filter { $0.column == square.column }
         let rowSquares = gameBoard.squares.filter { $0.row == square.row }
         let diagonalSquares: [Square]
