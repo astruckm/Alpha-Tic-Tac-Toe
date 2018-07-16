@@ -155,8 +155,8 @@ class ComputerMoves: TracksGameState {
                 let columnIndex = cornerValue % squaresPerSide
                 let numberPlayedInRow = playedSquaresIndices.filter{($0 / squaresPerSide) == rowIndex}.count
                 let numberPlayedInColumn = playedSquaresIndices.filter{($0 % squaresPerSide) == columnIndex}.count
-                //position has to be empty, and its row and column have to each have only one other square to prevent human from having chance to win
-                if let position = Square.Position(rawValue: cornerValue), !playedSquaresPositions.contains(position), numberPlayedInRow <= 1, numberPlayedInColumn <= 1 {
+                //position has to be empty, and its row and column have to each have exactly one other square to prevent human from having chance to win
+                if let position = Square.Position(rawValue: cornerValue), !playedSquaresPositions.contains(position), numberPlayedInRow == 1, numberPlayedInColumn == 1 {
                     
                     return position
                 }
@@ -177,13 +177,11 @@ class ComputerMoves: TracksGameState {
         }
     }
 
-    //TODO: abstract this more, so can take in any value, use for firstMove
     private func generateRandomPosition(possibleValues: Int) -> Square.Position {
-        let random = Int(arc4random_uniform(possibleValues))
+        let random = Int(arc4random_uniform(UInt32(possibleValues)))
         return Square.Position(rawValue: random)!
     }
 
-    //TODO: abstract finding another rawValue in a row or column???
     
 }
 
