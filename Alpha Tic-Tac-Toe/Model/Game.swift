@@ -9,6 +9,7 @@ protocol TracksGameState {
 class Game {
     //MARK: Properties
     let gameBoard = GameBoard()
+    let gameResult = GameResult()
     let computer = ComputerMoves(playingAsX: true)
     var winner: Square.State?
     var isXsTurn = false
