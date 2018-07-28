@@ -14,6 +14,7 @@
 		7217731920F45FB300AE4934 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217731820F45FB300AE4934 /* Game.swift */; };
 		7217731B20F45FF700AE4934 /* ComputerMoves.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217731A20F45FF700AE4934 /* ComputerMoves.swift */; };
 		721B9B6F20F7C4B30094604A /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721B9B6E20F7C4B30094604A /* GameBoard.swift */; };
+		72B6A316210A332F00B3BDAC /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B6A315210A332F00B3BDAC /* Player.swift */; };
 		72BA053420F3884500AC40C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72BA053320F3884500AC40C9 /* AppDelegate.swift */; };
 		72BA053620F3884500AC40C9 /* TTTViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72BA053520F3884500AC40C9 /* TTTViewController.swift */; };
 		72BA053920F3884500AC40C9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 72BA053720F3884500AC40C9 /* Main.storyboard */; };
@@ -30,6 +31,7 @@
 		7217731820F45FB300AE4934 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		7217731A20F45FF700AE4934 /* ComputerMoves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputerMoves.swift; sourceTree = "<group>"; };
 		721B9B6E20F7C4B30094604A /* GameBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
+		72B6A315210A332F00B3BDAC /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		72BA053020F3884500AC40C9 /* Alpha Tic-Tac-Toe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Alpha Tic-Tac-Toe.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		72BA053320F3884500AC40C9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		72BA053520F3884500AC40C9 /* TTTViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTTViewController.swift; sourceTree = "<group>"; };
@@ -58,6 +60,7 @@
 				7212E5C921065945002C0BA1 /* GameResult.swift */,
 				7217731A20F45FF700AE4934 /* ComputerMoves.swift */,
 				721B9B6E20F7C4B30094604A /* GameBoard.swift */,
+				72B6A315210A332F00B3BDAC /* Player.swift */,
 				7217627B20F5B3F600D9FB76 /* Square.swift */,
 			);
 			path = Model;
@@ -190,6 +193,7 @@
 				7217627C20F5B3F600D9FB76 /* Square.swift in Sources */,
 				721B9B6F20F7C4B30094604A /* GameBoard.swift in Sources */,
 				72BA053620F3884500AC40C9 /* TTTViewController.swift in Sources */,
+				72B6A316210A332F00B3BDAC /* Player.swift in Sources */,
 				72BA053420F3884500AC40C9 /* AppDelegate.swift in Sources */,
 				7217731B20F45FF700AE4934 /* ComputerMoves.swift in Sources */,
 				7212E5CA21065945002C0BA1 /* GameResult.swift in Sources */,

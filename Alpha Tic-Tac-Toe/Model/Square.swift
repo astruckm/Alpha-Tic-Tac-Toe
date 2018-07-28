@@ -18,6 +18,7 @@ struct Square: Hashable, Equatable {
     enum State: String, Equatable, Hashable {
         case empty, x, o
         
+        //TODO: Move this to Players type??
         var adversary: State? {
             switch self {
             case .empty: return nil

@@ -6,8 +6,7 @@ class TicTacToeViewController: UIViewController {
     @IBOutlet weak var newGame: UIButton!
     @IBOutlet var squares: [UIButton]!
     
-    var game = Game()
-    var playIsInProgress = false
+    var game = Game(playerWithFirstMove: .human)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +16,7 @@ class TicTacToeViewController: UIViewController {
     }
     
     @IBAction func squareTapped(_ sender: UIButton) {
-        guard playIsInProgress == true else { return }
+        guard game.gameIsInProgress == true else { return }
         guard game.gameBoard.squares[sender.tag].state == .empty else { return }
         
         let image = game.isXsTurn == true ? UIImage(named: "X.png") : UIImage(named: "O.png")
@@ -28,12 +27,12 @@ class TicTacToeViewController: UIViewController {
         //Wait withTimeInterval seconds before computer move appears
         let _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [unowned self] (timer) in
             self.updateUI()
+            self.callAlertIfGameEnded()
         }
     }
     
     @IBAction func newGame(_ sender: UIButton) {
-        playIsInProgress = true
-        game = Game()
+        game = Game(playerWithFirstMove: .human)
         updateUI()
     }
     
@@ -56,28 +55,30 @@ class TicTacToeViewController: UIViewController {
             case .x: square.setImage(xImage, for: .normal)
             }
         }
-        checkIfGameEnded()
     }
     
-    private func checkIfGameEnded() {
-        if game.winner != nil || game.turnsPlayed == 9 {
-            let completionMessage: String?
+    private func callAlertIfGameEnded() {
+        if !game.gameIsInProgress {
+            let completionMessage: String
             if let winner = game.winner {
-                let winnerText = winner == .x ? "X" : "O"
+                let winnerText = winner == .human ? "X" : "O"
                 completionMessage = "\(winnerText) is the winner!"
             } else {
                 completionMessage = "Tie game."
             }
-            
-            let alertVC = UIAlertController(title: completionMessage, message: nil, preferredStyle: UIAlertControllerStyle.alert)
-            let endGameAction = UIAlertAction(title: "Reset", style: .default) { [unowned self ] action in
-                self.game = Game()
-                self.updateUI()
-            }
-            alertVC.addAction(endGameAction)
-            
-            present(alertVC, animated: true)
+            callAlert(withMessage: completionMessage)
         }
+    }
+    
+    private func callAlert(withMessage completionMessage: String?) {
+        let alertVC = UIAlertController(title: completionMessage, message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let endGameAction = UIAlertAction(title: "Reset", style: .default) { [unowned self ] action in
+            self.game = Game(playerWithFirstMove: .human)
+            self.updateUI()
+        }
+        alertVC.addAction(endGameAction)
+        
+        present(alertVC, animated: true)
     }
     
 }
