@@ -53,17 +53,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		72AC54AE20F9504500DE62D8 /* Model */ = {
+		72AC54AE20F9504500DE62D8 /* Play Game */ = {
 			isa = PBXGroup;
 			children = (
 				7217731820F45FB300AE4934 /* Game.swift */,
 				7212E5C921065945002C0BA1 /* GameResult.swift */,
 				7217731A20F45FF700AE4934 /* ComputerMoves.swift */,
-				721B9B6E20F7C4B30094604A /* GameBoard.swift */,
-				72B6A315210A332F00B3BDAC /* Player.swift */,
-				7217627B20F5B3F600D9FB76 /* Square.swift */,
 			);
-			path = Model;
+			path = "Play Game";
 			sourceTree = "<group>";
 		};
 		72AC54B120F9730100DE62D8 /* Supporting Files */ = {
@@ -107,12 +104,23 @@
 			children = (
 				72BA053720F3884500AC40C9 /* Main.storyboard */,
 				72BA053520F3884500AC40C9 /* TTTViewController.swift */,
-				72AC54AE20F9504500DE62D8 /* Model */,
+				72AC54AE20F9504500DE62D8 /* Play Game */,
+				72D1617A211374A20057068D /* Game Elements */,
 				72AC54B220F9775F00DE62D8 /* Helpers */,
 				72AC54B120F9730100DE62D8 /* Supporting Files */,
 				72BA053F20F3884700AC40C9 /* Info.plist */,
 			);
 			path = "Alpha Tic-Tac-Toe";
+			sourceTree = "<group>";
+		};
+		72D1617A211374A20057068D /* Game Elements */ = {
+			isa = PBXGroup;
+			children = (
+				72B6A315210A332F00B3BDAC /* Player.swift */,
+				721B9B6E20F7C4B30094604A /* GameBoard.swift */,
+				7217627B20F5B3F600D9FB76 /* Square.swift */,
+			);
+			path = "Game Elements";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

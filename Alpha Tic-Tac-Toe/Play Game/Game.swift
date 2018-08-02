@@ -8,7 +8,7 @@ protocol TracksGameState {
 //Play the game
 class Game {
     //MARK: Properties
-    let gameBoard = GameBoard()
+    let gameBoard = GameBoard(numSquaresPerSide: 3)
     let gameResult = GameResult()
     let computer = ComputerMoves(playingAsX: true)
     let players: [Player] = [.computer, .human]
@@ -19,7 +19,7 @@ class Game {
     var turnsPlayed = 0
     var gameIsInProgress: Bool {
         get {
-            return turnsPlayed < gameResult.numTotalSquares && winner == nil
+            return turnsPlayed < 9 && winner == nil
         } set { }
     }
     var tracksGameStateDelegate: TracksGameState?
@@ -62,7 +62,7 @@ class Game {
         gameResult.checkForWinner(ofGame: gameBoard, sidePlayed: sideTapped, atSquare: square, currentPlayer: playerWhoseTurnItIs)
         winner = gameResult.winner
         
-        let newSquare = Square(position: square.position, state: sideTapped)
+        let newSquare = Square(positionIndex: square.position.rawValue, totalNumSquares: gameBoard.totalNumSquares, state: sideTapped)
         tracksGameStateDelegate?.playedSquares.append(newSquare)
         isXsTurn.toggle()
         turnsPlayed += 1

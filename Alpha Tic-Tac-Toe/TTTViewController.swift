@@ -24,10 +24,11 @@ class TicTacToeViewController: UIViewController {
         let square = game.gameBoard.squares[sender.tag]
         game.humanMove(atSquare: square)
         
+        callAlertIfGameEnded()
+        
         //Wait withTimeInterval seconds before computer move appears
         let _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [unowned self] (timer) in
             self.updateUI()
-            self.callAlertIfGameEnded()
         }
     }
     

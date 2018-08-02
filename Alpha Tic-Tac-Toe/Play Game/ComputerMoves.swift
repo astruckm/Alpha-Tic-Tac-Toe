@@ -116,7 +116,7 @@ class ComputerMoves: TracksGameState {
             let position = generateRandomPosition(possibleValues: 9)
             
             if !playedSquaresPositions.contains(position) {
-                let possibleSquare = Square(position: position, state: side)
+                let possibleSquare = Square(positionIndex: position.rawValue, totalNumSquares: 9, state: side)
                 //If position is on a possibleWinningLine that is column or row (not diagonal), return.
                 for square in possibleWinningLineSquares {
                     let sumPossibleRawValues = square[0].position.rawValue + possibleSquare.position.rawValue

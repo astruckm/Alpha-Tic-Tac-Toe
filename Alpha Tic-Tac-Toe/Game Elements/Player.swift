@@ -11,4 +11,6 @@ import Foundation
 enum Player {
     case human
     case computer
+    
+    //TODO: some adversary property?
 }
