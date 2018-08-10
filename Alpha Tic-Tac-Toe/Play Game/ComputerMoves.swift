@@ -1,6 +1,7 @@
 
 import Foundation
 
+//TODO: should have access to GameBoard, but not 
 class ComputerMoves: TracksGameState {
     //MARK: Properties
     let playingAsX: Bool

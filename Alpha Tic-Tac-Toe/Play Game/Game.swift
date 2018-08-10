@@ -16,10 +16,10 @@ class Game {
     var winner: Player?
     var playerWhoseTurnItIs: Player
     var isXsTurn = false
-    var turnsPlayed = 0
+    var movesPlayed = 0
     var gameIsInProgress: Bool {
         get {
-            return turnsPlayed < 9 && winner == nil
+            return movesPlayed < gameBoard.totalNumSquares && winner == nil
         } set { }
     }
     var tracksGameStateDelegate: TracksGameState?
@@ -36,12 +36,12 @@ class Game {
         move(atSquare: square)
         guard gameIsInProgress == true else { return }
         computer.updateImportantPairs()
-        computerMove()
+        computerMove()  ///TODO: should this be called here? what about human v. human?
     }
     
     func computerMove() {
         guard winner == nil else { return }
-        if turnsPlayed <= 1 {
+        if movesPlayed <= 1 {
             let firstMove: Square? = tracksGameStateDelegate?.playedSquares.first
             let computerFirstMovePosition = computer.playFirstMove(humanMove: firstMove)
             let computerFirstMove = gameBoard.squares[computerFirstMovePosition.rawValue]
@@ -62,10 +62,10 @@ class Game {
         gameResult.checkForWinner(ofGame: gameBoard, sidePlayed: sideTapped, atSquare: square, currentPlayer: playerWhoseTurnItIs)
         winner = gameResult.winner
         
-        let newSquare = Square(positionIndex: square.position.rawValue, totalNumSquares: gameBoard.totalNumSquares, state: sideTapped)
+        let newSquare = Square(positionIndex: square.positionIndex, totalNumSquares: gameBoard.totalNumSquares, state: sideTapped)
         tracksGameStateDelegate?.playedSquares.append(newSquare)
         isXsTurn.toggle()
-        turnsPlayed += 1
+        movesPlayed += 1
     }
     
 }
