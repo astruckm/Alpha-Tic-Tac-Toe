@@ -3,6 +3,7 @@ import Foundation
 
 protocol TracksGameState {
     var playedSquares: [Square] { get set }
+    var unplayedSquares: Set<Square> { get set }
 }
 
 //Play the game
@@ -15,20 +16,21 @@ class Game {
     
     var winner: Player?
     var playerWhoseTurnItIs: Player
-    var isXsTurn = false
+    var isXsTurn: Bool
     var movesPlayed = 0
     var gameIsInProgress: Bool {
         get {
             return movesPlayed < gameBoard.totalNumSquares && winner == nil
-        } set { }
+        }
     }
     var tracksGameStateDelegate: TracksGameState?
     
     //MARK: Initialization
-    init(playerWithFirstMove: Player) {
-        //TODO: This should maybe initialize the player and isXsTurn properties, perhaps many more
+    init(playerWithFirstMove: Player, isXsTurn: Bool) {
         self.playerWhoseTurnItIs = playerWithFirstMove
+        self.isXsTurn = isXsTurn
         tracksGameStateDelegate = computer
+        tracksGameStateDelegate?.unplayedSquares = Set(gameBoard.squares)
     }
     
     //MARK: Methods called to play game
@@ -58,11 +60,11 @@ class Game {
         guard square.state == .empty else { return }
         
         let sideTapped: Square.State = isXsTurn == true ? .x : .o
-        gameBoard.squares[square.position.rawValue].state = sideTapped
+        gameBoard.squares[square.positionIndex].state = sideTapped
         gameResult.checkForWinner(ofGame: gameBoard, sidePlayed: sideTapped, atSquare: square, currentPlayer: playerWhoseTurnItIs)
         winner = gameResult.winner
         
-        let newSquare = Square(positionIndex: square.positionIndex, totalNumSquares: gameBoard.totalNumSquares, state: sideTapped)
+        let newSquare = Square(positionIndex: square.positionIndex, state: sideTapped)
         tracksGameStateDelegate?.playedSquares.append(newSquare)
         isXsTurn.toggle()
         movesPlayed += 1

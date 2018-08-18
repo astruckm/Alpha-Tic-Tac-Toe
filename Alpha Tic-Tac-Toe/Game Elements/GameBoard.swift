@@ -14,7 +14,7 @@ class GameBoard {
         self.squaresPerSide = squaresPerSide
         totalNumSquares = Int(pow(Double(squaresPerSide), 2))
         for position in 0..<totalNumSquares {
-            squares.append(Square(positionIndex: position, totalNumSquares: totalNumSquares, state: .empty))
+            squares.append(Square(positionIndex: position, state: .empty))
         }
     }
     

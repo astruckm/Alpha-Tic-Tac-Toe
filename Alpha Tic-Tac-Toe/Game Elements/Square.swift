@@ -4,7 +4,7 @@ import Foundation
 
 //This is the base object, from which the game board and its state is created
 struct Square: Hashable, Equatable {
-    let positionIndex: Int
+    let positionIndex: Int //TODO: ensure this is never higher than totalNumSquares-1
     let position: Position
     var state: State
     
@@ -14,12 +14,8 @@ struct Square: Hashable, Equatable {
     var isOnDiagonalLR: Bool { return (self.row == self.column) && (squaresPerSide % 2 == 1) }
     var isOnDiagonalRL: Bool { return (self.row + self.column == (squaresPerSide-1)) && (squaresPerSide % 2 == 1) }
 
-    init(positionIndex: Int, totalNumSquares: Int, state: State) {
-        if positionIndex > totalNumSquares || positionIndex < 0 {
-            self.positionIndex = positionIndex % totalNumSquares
-        } else {
-            self.positionIndex = positionIndex
-        }
+    init(positionIndex: Int, state: State) {
+        self.positionIndex = positionIndex
         self.state = state
         
         self.position = Position(rawValue: positionIndex)!

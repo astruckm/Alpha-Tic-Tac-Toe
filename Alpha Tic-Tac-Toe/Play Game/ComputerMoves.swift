@@ -12,8 +12,9 @@ class ComputerMoves: TracksGameState {
     }
 
     //MARK: TracksGameState
-    //Sub-types of playedSquares in extensions below
+    //Sub-types of playedSquares in extensions
     var playedSquares: [Square] = []
+    var unplayedSquares: Set<Square> = []
     
     //MARK: Track important pairs/lines
     private var threateningPairs: [(Square, Square)] = []
@@ -40,6 +41,7 @@ class ComputerMoves: TracksGameState {
     }
     
     
+    //TODO: Make these output squares with corresponding positionIndex
     //MARK: Methods called in Game
     
     func playFirstMove(humanMove: Square?) -> Square.Position {
@@ -117,7 +119,7 @@ class ComputerMoves: TracksGameState {
             let position = generateRandomPosition(possibleValues: 9)
             
             if !playedSquaresPositions.contains(position) {
-                let possibleSquare = Square(positionIndex: position.rawValue, totalNumSquares: 9, state: side)
+                let possibleSquare = Square(positionIndex: position.rawValue, state: side)
                 //If position is on a possibleWinningLine that is column or row (not diagonal), return.
                 for square in possibleWinningLineSquares {
                     let sumPossibleRawValues = square[0].position.rawValue + possibleSquare.position.rawValue

@@ -6,7 +6,7 @@ class TicTacToeViewController: UIViewController {
     @IBOutlet weak var newGame: UIButton!
     @IBOutlet var squares: [UIButton]!
     
-    var game = Game(playerWithFirstMove: .human)
+    var game = Game(playerWithFirstMove: .human, isXsTurn: false)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +33,7 @@ class TicTacToeViewController: UIViewController {
     }
     
     @IBAction func newGame(_ sender: UIButton) {
-        game = Game(playerWithFirstMove: .human)
+        game = Game(playerWithFirstMove: .human, isXsTurn: false)
         updateUI()
     }
     
@@ -74,7 +74,7 @@ class TicTacToeViewController: UIViewController {
     private func callAlert(withMessage completionMessage: String?) {
         let alertVC = UIAlertController(title: completionMessage, message: nil, preferredStyle: UIAlertControllerStyle.alert)
         let endGameAction = UIAlertAction(title: "Reset", style: .default) { [unowned self ] action in
-            self.game = Game(playerWithFirstMove: .human)
+            self.game = Game(playerWithFirstMove: .human, isXsTurn: false)
             self.updateUI()
         }
         alertVC.addAction(endGameAction)
